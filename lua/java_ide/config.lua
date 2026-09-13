@@ -12,6 +12,12 @@ M.defaults = {
   fast_run = true,
   -- Comando de Maven. nil = `mvnd` si está instalado, si no `mvn`.
   maven = nil,
+  -- Archivo con variables de entorno (CLAVE=valor) que se cargan al ejecutar. false = no cargar.
+  env_file = ".env",
+  spring = {
+    -- Servidor de Spring Initializr (cambiarlo si tu empresa tiene uno propio).
+    initializr_url = "https://start.spring.io",
+  },
   -- Terminal donde se ejecuta todo: position = "bottom" | "right", size = fracción de la pantalla.
   terminal = { position = "bottom", size = 0.4 },
   -- Atajos. false para no crear ninguno.
