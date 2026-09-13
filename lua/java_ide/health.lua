@@ -27,6 +27,11 @@ function M.check()
     vim.health.info("Versión de Java: " .. version)
   end
   check_exe("mvn", false, "Necesario para proyectos Maven")
+  if vim.fn.executable("mvnd") == 1 then
+    vim.health.ok("mvnd encontrado (se usa en lugar de mvn)")
+  else
+    vim.health.info("mvnd no encontrado: opcional, hace que compilar y testear con Maven sea más rápido")
+  end
   check_exe("gradle", false, "Opcional: los proyectos con ./gradlew no lo necesitan")
 
   if pcall(require, "jdtls") then

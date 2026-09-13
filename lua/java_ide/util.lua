@@ -72,18 +72,21 @@ function M.ask(prompt, default, cb)
   end)
 end
 
---- Versión mayor del `java` instalado (17, 21, ...), o nil.
+local java_version_cache
+
+--- Versión mayor del `java` instalado (17, 21, ...), o nil. Se calcula una sola vez.
 function M.java_major_version()
-  if vim.fn.executable("java") == 0 then
-    return nil
+  if java_version_cache ~= nil then
+    return java_version_cache or nil
   end
-  local res = vim.system({ "java", "-version" }, { text = true }):wait()
-  local v = ((res.stderr or "") .. (res.stdout or "")):match('version "([^"]+)"')
-  if not v then
-    return nil
+  java_version_cache = false
+  if vim.fn.executable("java") == 1 then
+    local res = vim.system({ "java", "-version" }, { text = true }):wait()
+    local v = ((res.stderr or "") .. (res.stdout or "")):match('version "([^"]+)"')
+    local major = v and (v:match("^1%.(%d+)") or v:match("^(%d+)"))
+    java_version_cache = tonumber(major) or false
   end
-  local major = v:match("^1%.(%d+)") or v:match("^(%d+)")
-  return tonumber(major)
+  return java_version_cache or nil
 end
 
 --- Nombre del ejecutable según el sistema (mvn → mvn.cmd en Windows).
@@ -92,6 +95,18 @@ function M.exe(name)
     return name .. ".cmd"
   end
   return name
+end
+
+--- Ejecutable de Maven: el de la config, o `mvnd` (Maven con daemon, mucho más rápido) si está instalado.
+function M.maven()
+  local configured = require("java_ide.config").options.maven
+  if configured then
+    return configured
+  end
+  if vim.fn.executable("mvnd") == 1 then
+    return M.exe("mvnd")
+  end
+  return M.exe("mvn")
 end
 
 return M
