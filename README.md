@@ -1,57 +1,78 @@
-# java-ide.nvim
+<h1 align="center">java-ide.nvim</h1>
 
-Trabaja con Java en Neovim como en IntelliJ: crea proyectos Maven y Spring Boot, clases con
-su paquete, y ejecuta, compila y prueba tu código (o tu API) sin salir del editor.
+<p align="center">
+  <a href="https://neovim.io"><img alt="Neovim 0.10+" src="https://img.shields.io/badge/Neovim-0.10%2B-57A143?style=for-the-badge&logo=neovim&logoColor=white"></a>
+  <a href="https://www.lua.org"><img alt="Lua" src="https://img.shields.io/badge/Lua-2C2D72?style=for-the-badge&logo=lua&logoColor=white"></a>
+  <a href="https://openjdk.org"><img alt="Java 17+" src="https://img.shields.io/badge/Java-17%2B-ED8B00?style=for-the-badge&logo=openjdk&logoColor=white"></a>
+  <a href="https://spring.io/projects/spring-boot"><img alt="Spring Boot" src="https://img.shields.io/badge/Spring_Boot-6DB33F?style=for-the-badge&logo=springboot&logoColor=white"></a>
+  <a href="https://maven.apache.org"><img alt="Maven" src="https://img.shields.io/badge/Maven-C71A36?style=for-the-badge&logo=apachemaven&logoColor=white"></a>
+  <a href="https://gradle.org"><img alt="Gradle" src="https://img.shields.io/badge/Gradle-02303A?style=for-the-badge&logo=gradle&logoColor=white"></a>
+</p>
 
-> Se complementa con [nvim-jdtls](https://github.com/mfussenegger/nvim-jdtls), que da
-> autocompletado, errores e imports automáticos. Este plugin cubre lo que jdtls no hace:
-> crear proyectos y clases, y correr tu código.
+<p align="center">
+  <a href="https://github.com/piales00/java-ide.nvim/releases/latest"><img alt="Latest release" src="https://img.shields.io/github/v/release/piales00/java-ide.nvim?style=for-the-badge&color=blue"></a>
+  <a href="LICENSE"><img alt="License: MIT" src="https://img.shields.io/github/license/piales00/java-ide.nvim?style=for-the-badge&color=yellow"></a>
+  <a href="https://github.com/piales00/java-ide.nvim/commits/main"><img alt="Last commit" src="https://img.shields.io/github/last-commit/piales00/java-ide.nvim?style=for-the-badge"></a>
+</p>
 
-## Qué hace
+<p align="center">
+  Work with Java in Neovim like you would in IntelliJ: create Maven and Spring Boot projects,
+  create classes with their package, and run, build and test your code (or your API) without
+  leaving the editor.
+</p>
 
-- **Nuevo proyecto** Maven (Java y JUnit 5 ya configurados), **Spring Boot** (con
-  [start.spring.io](https://start.spring.io): eliges versión, Maven o Gradle y dependencias) o
-  Java plano (`src/` + `out/`).
-- **Nueva clase / interfaz / enum / record / test**: escribe `com.app.model.User` y se crean
-  la carpeta y el `package` automáticamente. Los tests van solos a `src/test/java`.
-- **Ejecutar el `main` del archivo abierto** en milisegundos: usa `java` directamente, compila
-  solo si hay cambios y los imports entre paquetes funcionan. Puedes escribir input
-  (`Scanner`) en la terminal.
-- **APIs:** levanta tu aplicación Spring Boot con perfiles (`dev`, `prod`…) y variables de un
-  archivo `.env`; la deja corriendo en segundo plano y la reinicia o detiene con una tecla.
-- **Compilar, testear (archivo o todo), empaquetar y limpiar** con Maven o Gradle.
-- **Agregar dependencias** al `pom.xml` con `groupId:artifactId:version`.
-- `:checkhealth java_ide` para ver si te falta instalar algo.
+> Designed to work alongside [nvim-jdtls](https://github.com/mfussenegger/nvim-jdtls), which
+> provides completion, diagnostics and automatic imports. This plugin covers what jdtls doesn't:
+> creating projects and classes, and running your code.
 
-## Requisitos
+> [!NOTE]
+> The plugin's prompts and messages are currently in Spanish.
+
+## Features
+
+- **New project**: Maven (Java and JUnit 5 preconfigured), **Spring Boot** (via
+  [start.spring.io](https://start.spring.io): pick the version, Maven or Gradle, and dependencies)
+  or plain Java (`src/` + `out/`).
+- **New class / interface / enum / record / test**: type `com.app.model.User` and the folder and
+  `package` declaration are created for you. Tests go to `src/test/java` automatically.
+- **Run the `main` of the current file** in milliseconds: it calls `java` directly, only compiles
+  when something changed, and imports across packages just work. You can type input
+  (`Scanner`) in the terminal.
+- **APIs:** start your Spring Boot app with profiles (`dev`, `prod`…) and variables from a `.env`
+  file; it keeps running in the background and you can restart or stop it with one key.
+- **Build, test (current file or all), package and clean** with Maven or Gradle.
+- **Add dependencies** to `pom.xml` with `groupId:artifactId:version`.
+- `:checkhealth java_ide` to see if anything is missing.
+
+## Requirements
 
 - Neovim >= 0.10
-- JDK 17 o superior (`java` y `javac`)
-- Maven (`mvn`) para proyectos Maven
-- `curl` y `tar` para crear proyectos Spring Boot (vienen instalados en casi todos los sistemas)
-- Opcional: [mvnd](https://github.com/apache/maven-mvnd) para que Maven sea más rápido, y
-  Gradle si usas proyectos Gradle sin `./gradlew`
-- Probado en Linux. En macOS debería funcionar igual; en Windows funcionan Maven y Gradle,
-  pero no los proyectos Java planos
+- JDK 17 or newer (`java` and `javac`)
+- Maven (`mvn`) for Maven projects
+- `curl` and `tar` to create Spring Boot projects (preinstalled on almost every system)
+- Optional: [mvnd](https://github.com/apache/maven-mvnd) to make Maven faster, and Gradle if your
+  Gradle projects don't include `./gradlew`
+- Tested on Linux. It should work the same on macOS; on Windows, Maven and Gradle projects work,
+  but plain Java projects don't
 
-Instalar el JDK y Maven:
+Installing the JDK and Maven:
 
-| Sistema | Comando |
+| System | Command |
 | --- | --- |
 | Arch | `sudo pacman -S jdk21-openjdk maven` |
 | Ubuntu / Debian | `sudo apt install openjdk-21-jdk maven` |
 | Fedora | `sudo dnf install java-21-openjdk-devel maven` |
 | macOS | `brew install openjdk@21 maven` |
 
-Instalar mvnd (opcional):
+Installing mvnd (optional):
 
-| Sistema | Comando |
+| System | Command |
 | --- | --- |
 | Arch (AUR) | `yay -S mvnd` |
 | macOS | `brew install mvndaemon/homebrew-mvnd/mvnd` |
-| Cualquiera ([SDKMAN](https://sdkman.io)) | `sdk install mvnd` |
+| Any ([SDKMAN](https://sdkman.io)) | `sdk install mvnd` |
 
-## Instalación
+## Installation
 
 ### lazy.nvim / LazyVim
 
@@ -65,11 +86,12 @@ return {
 }
 ```
 
-Para tener también autocompletado y debugger en **LazyVim**, activa los extras `lang.java` y
-`dap.core` con `:LazyExtras`.
+To also get completion and a debugger in **LazyVim**, enable the `lang.java` and `dap.core`
+extras with `:LazyExtras`.
 
-> **Aviso LazyVim:** el extra `lang.java` usa `<leader>tt` y `<leader>tr` para los tests.
-> Si ya usas esas teclas para otra cosa, desactívalo y usa `<leader>jt` / `<leader>jT`:
+> [!WARNING]
+> The LazyVim `lang.java` extra uses `<leader>tt` and `<leader>tr` for tests. If you already use
+> those keys for something else, disable it and use `<leader>jt` / `<leader>jT` instead:
 >
 > ```lua
 > { "mfussenegger/nvim-jdtls", opts = { test = false } }
@@ -86,135 +108,138 @@ require("java_ide").setup()
 
 ```vim
 Plug 'piales00/java-ide.nvim'
-" después de plug#end():
+" after plug#end():
 lua require("java_ide").setup()
 ```
 
-Después de instalar, ejecuta `:checkhealth java_ide` para comprobar que no falte nada.
+After installing, run `:checkhealth java_ide` to make sure nothing is missing.
 
-### Actualizar
+### Updating
 
 - lazy.nvim: `:Lazy update java-ide.nvim`
 - vim.pack: `:lua vim.pack.update()`
 - vim-plug: `:PlugUpdate`
 
-## Primeros pasos
+## Getting started
 
-1. `<leader>jn` → elige **Maven** → escribe el nombre del proyecto, la carpeta, el groupId y
-   el paquete (puedes aceptar las sugerencias con Enter).
-2. Se crea el proyecto, Neovim se mueve a esa carpeta y abre `Main.java`.
-3. `<leader>jr` para ejecutarlo. La primera vez tarda unos segundos porque Maven descarga lo
-   que necesita; las siguientes son casi instantáneas.
-4. `<leader>jc` → **Class** → `com.example.miapp.model.User` para crear una clase en otro
-   paquete. Úsala desde `Main` y vuelve a ejecutar.
-5. `<leader>jt` en `MainTest.java` para correr los tests.
+1. `<leader>jn` → choose **Maven** → enter the project name, folder, groupId and package (press
+   Enter to accept the suggestions).
+2. The project is created, Neovim switches to that folder and opens `Main.java`.
+3. `<leader>jr` to run it. The first run takes a few seconds while Maven downloads what it needs;
+   after that it's almost instant.
+4. `<leader>jc` → **Class** → `com.example.myapp.model.User` to create a class in another
+   package. Use it from `Main` and run again.
+5. `<leader>jt` in `MainTest.java` to run the tests.
 
-Estructura que genera un proyecto Maven:
+Structure of a generated Maven project:
 
 ```
-miapp/
+myapp/
 ├── pom.xml
 ├── .gitignore
 └── src/
     ├── main/
-    │   ├── java/com/example/miapp/Main.java
+    │   ├── java/com/example/myapp/Main.java
     │   └── resources/
     └── test/
-        └── java/com/example/miapp/MainTest.java
+        └── java/com/example/myapp/MainTest.java
 ```
 
-Un proyecto Java plano es solo `src/<paquete>/Main.java`; al ejecutar se compila a `out/`.
+A plain Java project is just `src/<package>/Main.java`; it's compiled to `out/` when you run it.
 
-> Abre Neovim siempre en la **carpeta raíz del proyecto** (donde está el `pom.xml`), así jdtls
-> reconoce el proyecto completo.
+> [!TIP]
+> Always open Neovim in the **project root** (where `pom.xml` is) so jdtls picks up the whole
+> project.
 
-## Uso
+## Usage
 
-| Tecla | Comando | Acción |
+| Key | Command | Action |
 | --- | --- | --- |
-| `<leader>jn` | `:JavaNewProject` | Nuevo proyecto |
-| `<leader>jc` | `:JavaNewClass` | Nueva clase / interfaz / enum / record / test |
-| `<leader>jr` | `:JavaRun [args]` | Ejecutar el `main` del archivo abierto |
-| `<leader>jR` | `:JavaRunArgs` | Ejecutar pidiendo argumentos (recuerda los últimos) |
-| `<leader>js` | `:JavaStop` | Detener lo que se está ejecutando |
-| `<leader>jo` | `:JavaTerminal` | Mostrar u ocultar la terminal de ejecución |
-| `<leader>jP` | `:JavaProfile` | Elegir el perfil de Spring |
-| `<leader>jb` | `:JavaBuild` | Compilar |
-| `<leader>jt` | `:JavaTestFile` | Tests del archivo abierto |
-| `<leader>jT` | `:JavaTest` | Todos los tests |
-| `<leader>jp` | `:JavaPackage` | Generar el jar |
-| `<leader>jx` | `:JavaClean` | Clean (borra `target/` o `build/`) |
-| `<leader>jd` | `:JavaAddDependency` | Agregar dependencia Maven |
-| `<leader>ju` | `:JavaRefresh` | Recargar la configuración de jdtls |
+| `<leader>jn` | `:JavaNewProject` | New project |
+| `<leader>jc` | `:JavaNewClass` | New class / interface / enum / record / test |
+| `<leader>jr` | `:JavaRun [args]` | Run the `main` of the current file |
+| `<leader>jR` | `:JavaRunArgs` | Run asking for arguments (remembers the last ones) |
+| `<leader>js` | `:JavaStop` | Stop what is running |
+| `<leader>jo` | `:JavaTerminal` | Show or hide the run terminal |
+| `<leader>jP` | `:JavaProfile` | Choose the Spring profile |
+| `<leader>jb` | `:JavaBuild` | Build |
+| `<leader>jt` | `:JavaTestFile` | Run the tests of the current file |
+| `<leader>jT` | `:JavaTest` | Run all tests |
+| `<leader>jp` | `:JavaPackage` | Build the jar |
+| `<leader>jx` | `:JavaClean` | Clean (deletes `target/` or `build/`) |
+| `<leader>jd` | `:JavaAddDependency` | Add a Maven dependency |
+| `<leader>ju` | `:JavaRefresh` | Reload the jdtls configuration |
 
-Todo se ejecuta en una terminal abajo. Cada ejecución detiene y reemplaza a la anterior. Con `q`
-(en modo normal) se cierra la ventana, pero **el proceso sigue corriendo** (útil para una API):
-`<leader>jo` la vuelve a mostrar y `<leader>js` lo detiene.
+Everything runs in a terminal at the bottom. Each run stops and replaces the previous one.
+Pressing `q` (in normal mode) closes the window, but **the process keeps running** (handy for an
+API): `<leader>jo` shows it again and `<leader>js` stops it.
 
-`:JavaNewSpringProject` abre directamente el asistente de Spring Boot.
+`:JavaNewSpringProject` opens the Spring Boot wizard directly.
 
-### ¿Qué clase se ejecuta?
+### Which class runs?
 
-1. La del archivo abierto, si tiene `main`.
-2. Si no, la última que ejecutaste en ese proyecto (así puedes estar en un controller y
-   reiniciar la API).
-3. Si no, la configurada en el `pom.xml` (`exec.mainClass` o `start-class`).
-4. Si no, la única clase con `main` del proyecto, o te pregunta cuál si hay varias.
+1. The one in the current file, if it has a `main`.
+2. Otherwise, the last one you ran in that project (so you can restart the API from a
+   controller).
+3. Otherwise, the one configured in `pom.xml` (`exec.mainClass` or `start-class`).
+4. Otherwise, the only class with a `main` in the project, or it asks you which one if there are
+   several.
 
-### Nueva clase
+### New class
 
-Elige el tipo (Class, Interface, Enum, Record, Abstract class, Main class o JUnit test) y
-escribe el nombre:
+Choose the type (Class, Interface, Enum, Record, Abstract class, Main class or JUnit test) and
+type the name:
 
-- Con paquete (`com.app.model.User`): se crea `com/app/model/User.java` con su `package`.
-- Sin paquete (`User`): se crea en la raíz de fuentes, sin `package`.
-- Se sugiere el paquete del archivo que tienes abierto.
-- En Maven/Gradle, los tests se crean en `src/test/java` y lo demás en `src/main/java`.
+- With a package (`com.app.model.User`): creates `com/app/model/User.java` with its `package`.
+- Without a package (`User`): creates it in the source root, with no `package`.
+- The package of the file you have open is suggested.
+- In Maven/Gradle projects, tests are created in `src/test/java` and everything else in
+  `src/main/java`.
 
-### Agregar dependencias
+### Adding dependencies
 
-`<leader>jd` y escribe las coordenadas, por ejemplo:
+Press `<leader>jd` and type the coordinates, for example:
 
 ```
 com.google.code.gson:gson:2.11.0
 org.projectlombok:lombok:1.18.36:provided
 ```
 
-Se agregan al `<dependencies>` del proyecto y se recarga jdtls. Las coordenadas se buscan en
-[Maven Central](https://central.sonatype.com).
+They are added to the project's `<dependencies>` and jdtls is reloaded. You can look up
+coordinates on [Maven Central](https://central.sonatype.com).
 
-## Spring Boot y APIs
+## Spring Boot and APIs
 
-### Crear el proyecto
+### Creating the project
 
-`<leader>jn` → **Spring Boot** y responde:
+`<leader>jn` → **Spring Boot** and answer:
 
-1. Build: Maven, Gradle (Groovy) o Gradle (Kotlin DSL).
-2. Versión de Spring Boot (la recomendada aparece primero).
-3. Nombre, carpeta, groupId y paquete.
-4. Dependencias: se muestran solo las compatibles con esa versión. Con el picker de
-   [Snacks](https://github.com/folke/snacks.nvim) (LazyVim) marcas varias con `Tab` y confirmas
-   con `Enter`; si no marcas ninguna, se usa la que tiene el cursor. Sin Snacks, las agregas de
-   a una y eliges **✔ Crear proyecto** al terminar.
+1. Build: Maven, Gradle (Groovy) or Gradle (Kotlin DSL).
+2. Spring Boot version (the recommended one is listed first).
+3. Name, folder, groupId and package.
+4. Dependencies: only the ones compatible with that version are shown. With the
+   [Snacks](https://github.com/folke/snacks.nvim) picker (LazyVim) you mark several with `Tab`
+   and confirm with `Enter`; if you don't mark any, the one under the cursor is used. Without
+   Snacks, you add them one at a time and choose **✔ Crear proyecto** when you're done.
 
-El proyecto se descarga de start.spring.io, se abre la clase `*Application.java` y se agrega
-`.env` al `.gitignore`. La versión de Java es la que tienes instalada (o la más cercana que
-ofrezca start.spring.io).
+The project is downloaded from start.spring.io, the `*Application.java` class is opened and
+`.env` is added to `.gitignore`. The Java version is the one you have installed (or the closest
+one start.spring.io offers).
 
-### Ejecutar la API
+### Running the API
 
-`<leader>jr` levanta la aplicación con el modo rápido (con Maven) o con `bootRun` (con Gradle).
-Puedes seguir editando: cuando quieras aplicar cambios, `<leader>jr` otra vez detiene la API,
-espera a que libere el puerto y la vuelve a levantar.
+`<leader>jr` starts the application with fast run (Maven) or `bootRun` (Gradle). You can keep
+editing: when you want to apply your changes, `<leader>jr` again stops the API, waits for it to
+free the port and starts it again.
 
-**Variables de entorno (`.env`).** Si hay un archivo `.env` en la raíz del proyecto, sus
-variables se pasan al ejecutar y a los tests:
+**Environment variables (`.env`).** If there's a `.env` file in the project root, its variables
+are passed when running and to tests:
 
 ```sh
-# .env (no se sube a git)
-DB_URL=jdbc:postgresql://localhost:5432/tienda
+# .env (never committed to git)
+DB_URL=jdbc:postgresql://localhost:5432/shop
 DB_USER=admin
-DB_PASSWORD="mi clave"
+DB_PASSWORD="my password"
 ```
 
 ```properties
@@ -224,34 +249,34 @@ spring.datasource.username=${DB_USER}
 spring.datasource.password=${DB_PASSWORD}
 ```
 
-**Perfiles.** `<leader>jP` muestra los perfiles que encuentra (`application-dev.yml` → `dev`),
-o puedes escribir otros separados por coma. El perfil elegido se guarda por proyecto y se pasa
-como `SPRING_PROFILES_ACTIVE` al ejecutar (no a los tests, que suelen usar `@ActiveProfiles`).
+**Profiles.** `<leader>jP` lists the profiles it finds (`application-dev.yml` → `dev`), or you
+can type others separated by commas. The chosen profile is saved per project and passed as
+`SPRING_PROFILES_ACTIVE` when running (not to tests, which usually use `@ActiveProfiles`).
 
-### Probar endpoints
+### Testing endpoints
 
-Con [kulala.nvim](https://github.com/mistweaverco/kulala.nvim) pruebas tu API desde archivos
-`.http`, como el cliente HTTP de IntelliJ. En LazyVim se activa con `:LazyExtras` → `util.rest`.
+With [kulala.nvim](https://github.com/mistweaverco/kulala.nvim) you can test your API from `.http`
+files, like IntelliJ's HTTP client. In LazyVim, enable it with `:LazyExtras` → `util.rest`.
 
 ```http
-### Listar productos
-GET http://localhost:8080/api/productos
+### List products
+GET http://localhost:8080/api/products
 
-### Crear producto
-POST http://localhost:8080/api/productos
+### Create a product
+POST http://localhost:8080/api/products
 Content-Type: application/json
 
-{ "nombre": "Teclado", "precio": 25.5 }
+{ "name": "Keyboard", "price": 25.5 }
 ```
 
-Pon el cursor sobre una petición y usa `<leader>Rs` para enviarla (atajos del extra de LazyVim).
+Put the cursor on a request and press `<leader>Rs` to send it (keymaps from the LazyVim extra).
 
-### Autocompletado de Spring (opcional)
+### Spring completion (optional)
 
-[spring-boot.nvim](https://github.com/JavaHello/spring-boot.nvim) agrega lo que da la extensión de
-Spring de VS Code: autocompletado en `application.properties`/`application.yml`, buscar beans y
-endpoints (símbolos del workspace con `@/`, por ejemplo `@/hello -- GET`) y code actions.
-Con LazyVim y el extra `lang.java`:
+[spring-boot.nvim](https://github.com/JavaHello/spring-boot.nvim) brings what the VS Code Spring
+extension offers: completion in `application.properties`/`application.yml`, finding beans and
+endpoints (workspace symbols with `@/`, e.g. `@/hello -- GET`) and code actions. With LazyVim and
+the `lang.java` extra:
 
 ```lua
 -- ~/.config/nvim/lua/plugins/spring-boot.lua
@@ -269,7 +294,7 @@ return {
   {
     "mfussenegger/nvim-jdtls",
     opts = {
-      -- Agrega las extensiones de Spring a jdtls sin quitar las del debugger.
+      -- Add the Spring extensions to jdtls without removing the debugger ones.
       jdtls = function(config)
         local bundles = vim.deepcopy(config.init_options.bundles or {})
         vim.list_extend(bundles, require("spring_boot").java_extensions())
@@ -281,93 +306,93 @@ return {
 }
 ```
 
-La primera vez Mason descarga `vscode-spring-boot-tools` (~90 MB).
+The first time, Mason downloads `vscode-spring-boot-tools` (~90 MB).
 
-### ¿Cómo ejecuta?
+### How does running work?
 
-`<leader>jr` no pasa por Maven: ejecuta tu clase con `java` directamente y solo compila si
-algo cambió. Por eso es rápido:
+`<leader>jr` doesn't go through Maven: it runs your class with `java` directly and only compiles
+when something changed. That's why it's fast:
 
-| Situación | Tiempo aproximado |
+| Situation | Approximate time |
 | --- | --- |
-| Sin cambios, o jdtls ya compiló al guardar | **~50 ms** |
-| Con cambios (compila con `javac`) | ~0.6 s |
-| Primera vez, o cambiaste el `pom.xml` (calcula el classpath con Maven) | ~3 s |
-| Con `mvn compile exec:java` (versión 1.0) | ~3 s siempre |
+| No changes, or jdtls already compiled on save | **~50 ms** |
+| With changes (compiles with `javac`) | ~0.6 s |
+| First run, or `pom.xml` changed (resolves the classpath with Maven) | ~3 s |
+| With `mvn compile exec:java` (version 1.0) | ~3 s every time |
 
-| Proyecto | Qué hace |
+| Project | What it does |
 | --- | --- |
-| Maven | Guarda en caché las dependencias (`target/java-ide/`), compila `src/main/java` a `target/classes` si hace falta, copia `src/main/resources` y ejecuta `java -cp target/classes:<jars> <clase>`. Las dependencias `test` y `provided` no se incluyen al ejecutar, igual que con Maven |
-| Gradle | `./gradlew bootRun` en Spring Boot; si no, `./gradlew run` (necesita el plugin `application`) |
-| Sin build tool | Compila `src/` a `out/` si hace falta y ejecuta `java -cp out <clase>` |
+| Maven | Caches the dependencies (`target/java-ide/`), compiles `src/main/java` to `target/classes` when needed, copies `src/main/resources` and runs `java -cp target/classes:<jars> <class>`. `test` and `provided` dependencies are left out at runtime, just like Maven does |
+| Gradle | `./gradlew bootRun` for Spring Boot; otherwise `./gradlew run` (requires the `application` plugin) |
+| No build tool | Compiles `src/` to `out/` when needed and runs `java -cp out <class>` |
 
-Detalles:
+Details:
 
-- Lombok funciona con el modo rápido: si el procesador de anotaciones también es una dependencia
-  (como en los proyectos de start.spring.io), `javac` lo usa directamente.
-- Si el `pom.xml` usa cosas que `javac` solo no reproduce (módulos, procesadores que no son
-  dependencias como MapStruct, código generado, filtrado de recursos, `@project.version@` en
-  `application.properties`…), se compila con `mvn compile` y después se ejecuta con `java`.
-- Los `main` dentro de `src/test/java` se ejecutan con `mvn exec:java`.
-- Con `fast_run = false` se usa `mvn spring-boot:run` (Spring Boot) o `mvn compile exec:java`.
-- Compilar, tests y jar usan Maven (o `mvnd` si está instalado).
-- En Windows, `<leader>jr` usa `mvn spring-boot:run` o `mvn compile exec:java`.
-- Proyectos multi-módulo: por ahora no están soportados. Solo funciona un módulo que no
-  dependa de otros módulos del mismo proyecto.
+- Lombok works with fast run: if the annotation processor is also a dependency (as in
+  start.spring.io projects), `javac` uses it directly.
+- If `pom.xml` uses things `javac` alone can't reproduce (modules, processors that aren't
+  dependencies such as MapStruct, generated code, resource filtering, `@project.version@` in
+  `application.properties`…), it compiles with `mvn compile` and then runs with `java`.
+- A `main` inside `src/test/java` runs with `mvn exec:java`.
+- With `fast_run = false`, it uses `mvn spring-boot:run` (Spring Boot) or `mvn compile exec:java`.
+- Build, tests and jar use Maven (or `mvnd` if installed).
+- On Windows, `<leader>jr` uses `mvn spring-boot:run` or `mvn compile exec:java`.
+- Multi-module projects aren't supported yet. Only a module that doesn't depend on other modules
+  of the same project works.
 
-## Configuración
+## Configuration
 
-Estos son los valores por defecto:
+These are the defaults:
 
 ```lua
 require("java_ide").setup({
-  projects_dir = "~/Projects",   -- carpeta sugerida para proyectos nuevos
-  java_version = nil,            -- nil = detectar la del `java` instalado
-  group_id = "com.example",      -- groupId sugerido
-  fast_run = true,               -- false = ejecutar siempre con `mvn compile exec:java`
-  maven = nil,                   -- comando de Maven; nil = `mvnd` si está instalado, si no `mvn`
-  env_file = ".env",             -- variables de entorno al ejecutar; false = no cargar
+  projects_dir = "~/Projects",   -- suggested folder for new projects
+  java_version = nil,            -- nil = detect the installed `java`
+  group_id = "com.example",      -- suggested groupId
+  fast_run = true,               -- false = always run with `mvn compile exec:java`
+  maven = nil,                   -- Maven command; nil = `mvnd` if installed, otherwise `mvn`
+  env_file = ".env",             -- environment variables when running; false = don't load
   spring = {
-    initializr_url = "https://start.spring.io", -- o el Initializr de tu empresa
+    initializr_url = "https://start.spring.io", -- or your company's Initializr
   },
-  terminal = { position = "bottom", size = 0.4 }, -- o position = "right"
-  keymaps = { prefix = "<leader>j" },             -- false = sin atajos
+  terminal = { position = "bottom", size = 0.4 }, -- or position = "right"
+  keymaps = { prefix = "<leader>j" },             -- false = no keymaps
 })
 ```
 
-Con lazy.nvim, esas opciones van dentro de `opts = { ... }`.
+With lazy.nvim, these options go inside `opts = { ... }`.
 
-## Problemas comunes
+## Troubleshooting
 
-**Al ejecutar aparece `Unresolved compilation problem`.**
-Guardaste con errores y jdtls generó las clases igual. Corrige el error (lo ves marcado en el
-editor) y vuelve a ejecutar.
+**Running shows `Unresolved compilation problem`.**
+You saved with errors and jdtls generated the classes anyway. Fix the error (it's highlighted in
+the editor) and run again.
 
-**Algo quedó raro después de cambiar muchas cosas.**
-`<leader>jx` (clean) borra `target/` junto con la caché, y la próxima ejecución compila todo
-de nuevo.
+**Something looks off after changing a lot of things.**
+`<leader>jx` (clean) deletes `target/` along with the cache, and the next run compiles
+everything again.
 
-**No hay autocompletado ni errores en el editor.**
-Eso lo da jdtls, no este plugin. Revisa que nvim-jdtls esté instalado (`:checkhealth java_ide`),
-que abriste Neovim en la raíz del proyecto y espera unos segundos a que indexe la primera vez.
-Después de agregar dependencias a mano en el `pom.xml`, usa `<leader>ju`.
+**No completion or diagnostics in the editor.**
+That comes from jdtls, not from this plugin. Check that nvim-jdtls is installed
+(`:checkhealth java_ide`), that you opened Neovim in the project root, and give it a few seconds
+to index the first time. After editing dependencies by hand in `pom.xml`, use `<leader>ju`.
 
-**`mvn` o `javac` no encontrado.**
-Instala el JDK completo y Maven (ver [Requisitos](#requisitos)). `:checkhealth java_ide` te
-dice qué falta.
+**`mvn` or `javac` not found.**
+Install the full JDK and Maven (see [Requirements](#requirements)). `:checkhealth java_ide` tells
+you what's missing.
 
-**La API no arranca: `Port 8080 was already in use`.**
-Otra aplicación usa el puerto, por ejemplo una que levantaste fuera de Neovim. Detenla o cambia
-`server.port` en `application.properties`. Las que levanta el plugin se detienen solas al
-volver a ejecutar.
+**The API doesn't start: `Port 8080 was already in use`.**
+Another application is using the port, for example one you started outside Neovim. Stop it or
+change `server.port` in `application.properties`. Apps started by the plugin are stopped
+automatically when you run again.
 
-**No aparecen dependencias al crear un proyecto Spring Boot.**
-Se necesita conexión a internet para consultar start.spring.io. Revisa también que `curl`
-esté instalado (`:checkhealth java_ide`).
+**No dependencies show up when creating a Spring Boot project.**
+An internet connection is needed to reach start.spring.io. Also check that `curl` is installed
+(`:checkhealth java_ide`).
 
-**La primera ejecución de un proyecto nuevo tarda.**
-Es normal: Maven descarga sus plugins y las dependencias una sola vez.
+**The first run of a new project is slow.**
+That's expected: Maven downloads its plugins and your dependencies only once.
 
-## Licencia
+## License
 
-MIT
+[MIT](LICENSE)
