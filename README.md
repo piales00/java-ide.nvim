@@ -74,6 +74,13 @@ Installing mvnd (optional):
 
 ## Installation
 
+Which setup should you choose?
+
+| Setup | Best for | Includes |
+| --- | --- | --- |
+| [LazyVim](#lazynvim--lazyvim) | Beginners, or anyone who wants everything ready | This plugin, jdtls, debugger, file finder, file explorer, git integration and much more |
+| [Plain Neovim](#without-lazyvim-plain-neovim-012) | People who want to build their own config from scratch | This plugin, jdtls (completion, diagnostics, go to definition) and nothing else |
+
 ### lazy.nvim / LazyVim
 
 ```lua
@@ -102,6 +109,13 @@ extras with `:LazyExtras`.
 A complete setup in a single file: this plugin, plus [nvim-jdtls](https://github.com/mfussenegger/nvim-jdtls)
 for completion, diagnostics and go to definition. You also need `git` and `python3` (used by the
 jdtls launcher).
+
+> [!IMPORTANT]
+> This is a **minimal** setup, meant as a starting point. It does **not** include a debugger, a
+> file finder, a file explorer, git integration, syntax highlighting with Treesitter or a
+> statusline, and completion is Neovim's built-in one (simpler than blink.cmp or nvim-cmp).
+> If you're new to Neovim and want an IDE-like experience out of the box, use
+> [LazyVim](#lazynvim--lazyvim) instead.
 
 1. Save this as `~/.config/nvim/init.lua`:
 
