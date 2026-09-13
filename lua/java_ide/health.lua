@@ -32,6 +32,8 @@ function M.check()
   else
     vim.health.info("mvnd no encontrado: opcional, hace que compilar y testear con Maven sea más rápido")
   end
+  check_exe("curl", false, "Necesario para crear proyectos Spring Boot")
+  check_exe("tar", false, "Necesario para crear proyectos Spring Boot")
   check_exe("gradle", false, "Opcional: los proyectos con ./gradlew no lo necesitan")
 
   if pcall(require, "jdtls") then
