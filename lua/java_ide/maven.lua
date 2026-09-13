@@ -94,27 +94,32 @@ function M.property(pom, name)
   return value
 end
 
---- Versión de Java con la que compila el proyecto (release o source), o nil.
+--- Versión de Java con la que compila el proyecto, o nil.
+--- (`java.version` es la propiedad que usan los proyectos de Spring Boot.)
 function M.java_release(pom)
   local value = M.property(pom, "maven.compiler.release")
     or M.property(pom, "release")
+    or M.property(pom, "java.version")
     or M.property(pom, "maven.compiler.source")
     or M.property(pom, "source")
   value = value and value:gsub("^1%.(%d+)$", "%1")
   return value and value:match("^%d+$") and value or nil
 end
 
---- Clase main configurada en el pom (exec.mainClass o <mainClass>), o nil.
+--- Clase main configurada en el pom (exec.mainClass, start-class o <mainClass>), o nil.
 function M.main_class(pom)
-  local value = M.property(pom, "exec.mainClass") or M.property(pom, "mainClass")
+  local value = M.property(pom, "exec.mainClass") or M.property(pom, "start-class") or M.property(pom, "mainClass")
   return value and not value:find("${", 1, true) and value or nil
 end
 
--- Cosas del pom que `javac` solo no reproduce (código generado, procesadores de anotaciones,
--- módulos, filtrado de recursos...). Si aparecen, se compila con Maven.
+function M.is_spring_boot(pom)
+  return pom:find("org.springframework.boot", 1, true) ~= nil
+end
+
+-- Cosas del pom que `javac` solo no reproduce (código generado, módulos, filtrado de
+-- recursos...). Si aparecen, se compila con Maven.
 local NEEDS_MAVEN = {
   "<modules>",
-  "annotationProcessorPaths",
   "<filtering>true",
   "<sourceDirectory>",
   "<compilerArgs>",
@@ -125,13 +130,47 @@ local NEEDS_MAVEN = {
   "maven-antrun-plugin",
 }
 
-function M.needs_maven_compile(pom)
+--- Los procesadores de anotaciones configurados (ej. Lombok en proyectos de Spring Initializr)
+--- se pueden usar con javac si también son dependencias: javac los encuentra en el classpath.
+local function processors_in_classpath(pom)
+  local processors, rest = {}, pom
+  for block in pom:gmatch("<annotationProcessorPaths>(.-)</annotationProcessorPaths>") do
+    for artifact in block:gmatch("<artifactId>%s*(.-)%s*</artifactId>") do
+      table.insert(processors, artifact)
+    end
+  end
+  rest = rest:gsub("<annotationProcessorPaths>.-</annotationProcessorPaths>", "")
+  for _, artifact in ipairs(processors) do
+    if not rest:find("<artifactId>" .. artifact .. "</artifactId>", 1, true) then
+      return false
+    end
+  end
+  return true
+end
+
+--- Spring Boot filtra application.properties/yml: `@project.version@` se reemplaza al compilar.
+local function uses_resource_placeholders(root)
+  local dir = root .. "/src/main/resources"
+  for name, type in vim.fs.dir(dir) do
+    if type == "file" and name:match("^application.*%.[%a]+$") then
+      if util.read_file(dir .. "/" .. name):find("@[%w_.%-]+@") then
+        return true
+      end
+    end
+  end
+  return false
+end
+
+function M.needs_maven_compile(pom, root)
   for _, needle in ipairs(NEEDS_MAVEN) do
     if pom:find(needle, 1, true) then
       return true
     end
   end
-  return false
+  if not processors_in_classpath(pom) then
+    return true
+  end
+  return root ~= nil and M.is_spring_boot(pom) and uses_resource_placeholders(root)
 end
 
 function M.parse_coordinates(coords)
