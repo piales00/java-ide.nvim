@@ -7,6 +7,11 @@ M.defaults = {
   java_version = nil,
   -- groupId sugerido para proyectos nuevos.
   group_id = "com.example",
+  -- Ejecutar el main con `java` directamente (classpath en caché, compila solo si hay cambios).
+  -- false = usar siempre `mvn compile exec:java` (más lento, pero es el camino "oficial" de Maven).
+  fast_run = true,
+  -- Comando de Maven. nil = `mvnd` si está instalado, si no `mvn`.
+  maven = nil,
   -- Terminal donde se ejecuta todo: position = "bottom" | "right", size = fracción de la pantalla.
   terminal = { position = "bottom", size = 0.4 },
   -- Atajos. false para no crear ninguno.
