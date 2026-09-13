@@ -20,8 +20,8 @@ function M.check()
     vim.health.error("Se necesita Neovim >= 0.10")
   end
 
-  check_exe("java", true, "Instalá un JDK (17 o superior)")
-  check_exe("javac", true, "Instalá un JDK completo, no solo el JRE")
+  check_exe("java", true, "Instala un JDK (17 o superior)")
+  check_exe("javac", true, "Instala un JDK completo, no solo el JRE")
   local version = require("java_ide.util").java_major_version()
   if version then
     vim.health.info("Versión de Java: " .. version)

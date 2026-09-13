@@ -51,7 +51,7 @@ function M.run()
 
   if kind == "maven" then
     if not main_class and not pom_has_main_class(root) then
-      return util.warn("Abrí una clase con main (o definí exec.mainClass en el pom.xml)")
+      return util.warn("Abre una clase con main (o define exec.mainClass en el pom.xml)")
     end
     local cmd = { util.exe("mvn"), "-q", "compile", "exec:java" }
     if main_class then
@@ -63,7 +63,7 @@ function M.run()
   elseif main_class then
     run_plain(class)
   else
-    util.warn("Abrí un archivo .java con main para ejecutarlo")
+    util.warn("Abre un archivo .java con main para ejecutarlo")
   end
 end
 
@@ -92,7 +92,7 @@ function M.test_file()
   local kind, root = project.detect()
   local class = project.current_class()
   if not class then
-    return util.warn("Abrí una clase de test")
+    return util.warn("Abre una clase de test")
   end
   if kind == "maven" then
     terminal.run({ util.exe("mvn"), "test", "-Dtest=" .. class.fqcn, "-Dsurefire.failIfNoSpecifiedTests=false" }, root)

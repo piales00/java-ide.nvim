@@ -1,7 +1,7 @@
 # java-ide.nvim
 
-Trabajá con Java en Neovim como en IntelliJ: creá proyectos Maven, clases con su
-paquete, y ejecutá, compilá y testeá sin salir del editor.
+Trabaja con Java en Neovim como en IntelliJ: crea proyectos Maven, clases con su
+paquete, y ejecuta, compila y prueba tu código sin salir del editor.
 
 > Se complementa con [nvim-jdtls](https://github.com/mfussenegger/nvim-jdtls), que da
 > autocompletado, errores e imports automáticos. Este plugin cubre lo que jdtls no hace:
@@ -10,10 +10,10 @@ paquete, y ejecutá, compilá y testeá sin salir del editor.
 ## Qué hace
 
 - **Nuevo proyecto** Maven (Java y JUnit 5 ya configurados) o Java plano (`src/` + `out/`).
-- **Nueva clase / interfaz / enum / record / test**: escribí `com.app.model.User` y crea
-  la carpeta y el `package` por vos. Los tests van solos a `src/test/java`.
+- **Nueva clase / interfaz / enum / record / test**: escribe `com.app.model.User` y se crea
+  la carpeta y el `package` automáticamente. Los tests van solos a `src/test/java`.
 - **Ejecutar el `main` del archivo abierto** compilando *todo* el proyecto, así los
-  imports entre paquetes funcionan. Podés escribir input (`Scanner`) en la terminal.
+  imports entre paquetes funcionan. Puedes escribir input (`Scanner`) en la terminal.
 - **Compilar, testear (archivo o todo), empaquetar y limpiar** con Maven o Gradle.
 - **Agregar dependencias** al `pom.xml` con `groupId:artifactId:version`.
 - `:checkhealth java_ide` para ver si te falta instalar algo.
@@ -39,11 +39,11 @@ return {
 }
 ```
 
-Para tener también autocompletado y debugger en **LazyVim**, activá los extras `lang.java` y
+Para tener también autocompletado y debugger en **LazyVim**, activa los extras `lang.java` y
 `dap.core` con `:LazyExtras`.
 
 > **Aviso LazyVim:** el extra `lang.java` usa `<leader>tt` y `<leader>tr` para los tests.
-> Si esas teclas ya las usás para otra cosa, desactivalo y usá `<leader>jt` / `<leader>jT`:
+> Si ya usas esas teclas para otra cosa, desactívalo y usa `<leader>jt` / `<leader>jT`:
 >
 > ```lua
 > { "mfussenegger/nvim-jdtls", opts = { test = false } }
@@ -51,7 +51,7 @@ Para tener también autocompletado y debugger en **LazyVim**, activá los extras
 
 ### Otros gestores
 
-Instalá el repo y llamá a `require("java_ide").setup()`.
+Instala el repo y llama a `require("java_ide").setup()`.
 
 ## Uso
 

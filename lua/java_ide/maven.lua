@@ -124,7 +124,7 @@ end
 function M.refresh_lsp()
   local ok, jdtls = pcall(require, "jdtls")
   if not ok then
-    return util.warn("nvim-jdtls no está instalado; reiniciá el LSP para ver los cambios")
+    return util.warn("nvim-jdtls no está instalado; reinicia el LSP para ver los cambios")
   end
   pcall(jdtls.update_projects_config, { select_mode = "all" })
 end

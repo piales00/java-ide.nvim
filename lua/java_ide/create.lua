@@ -57,7 +57,7 @@ function M.new_project()
 
     util.ask("Nombre del proyecto: ", nil, function(name)
       if not name:match("^[%w_.%-]+$") then
-        return util.error("Nombre inválido (usá letras, números, '-', '_' o '.'): " .. name)
+        return util.error("Nombre inválido (usa letras, números, '-', '_' o '.'): " .. name)
       end
       p.name = name
 
