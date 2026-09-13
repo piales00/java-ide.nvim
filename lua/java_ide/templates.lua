@@ -68,8 +68,19 @@ function M.pom(opts)
   )
 end
 
-M.gitignore =
-  { "target/", "build/", "out/", ".gradle/", "*.class", ".idea/", "*.iml", ".classpath", ".project", ".settings/" }
+M.gitignore = {
+  "target/",
+  "build/",
+  "out/",
+  ".gradle/",
+  "*.class",
+  ".idea/",
+  "*.iml",
+  ".classpath",
+  ".project",
+  ".settings/",
+  ".env",
+}
 
 -- Tipos de archivo para "nueva clase". `%s` es el nombre de la clase.
 M.kinds = {

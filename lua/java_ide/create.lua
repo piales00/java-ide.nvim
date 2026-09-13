@@ -6,7 +6,7 @@ local util = require("java_ide.util")
 
 local M = {}
 
-local PROJECT_TYPES = { "Maven", "Java plano (src/ + out/, sin build tool)" }
+local PROJECT_TYPES = { "Maven", "Spring Boot (start.spring.io)", "Java plano (src/ + out/, sin build tool)" }
 
 local function open_project(dir, main_file)
   vim.cmd.cd(vim.fn.fnameescape(dir))
@@ -52,6 +52,9 @@ function M.new_project()
   vim.ui.select(PROJECT_TYPES, { prompt = "Tipo de proyecto" }, function(choice)
     if not choice then
       return
+    end
+    if choice == PROJECT_TYPES[2] then
+      return require("java_ide.spring").new_project()
     end
     local p = { maven = choice == PROJECT_TYPES[1] }
 
