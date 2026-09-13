@@ -84,6 +84,56 @@ function M.insert_dependency(text, dep)
   return nil, "No encontré dónde insertar la dependencia en el pom.xml"
 end
 
+--- Valor de una propiedad del pom (`<name>valor</name>`), resolviendo una referencia `${otra}`.
+function M.property(pom, name)
+  local value = pom:match("<" .. vim.pesc(name) .. ">%s*(.-)%s*</" .. vim.pesc(name) .. ">")
+  local ref = value and value:match("^%${(.+)}$")
+  if ref then
+    return M.property(pom, ref)
+  end
+  return value
+end
+
+--- Versión de Java con la que compila el proyecto (release o source), o nil.
+function M.java_release(pom)
+  local value = M.property(pom, "maven.compiler.release")
+    or M.property(pom, "release")
+    or M.property(pom, "maven.compiler.source")
+    or M.property(pom, "source")
+  value = value and value:gsub("^1%.(%d+)$", "%1")
+  return value and value:match("^%d+$") and value or nil
+end
+
+--- Clase main configurada en el pom (exec.mainClass o <mainClass>), o nil.
+function M.main_class(pom)
+  local value = M.property(pom, "exec.mainClass") or M.property(pom, "mainClass")
+  return value and not value:find("${", 1, true) and value or nil
+end
+
+-- Cosas del pom que `javac` solo no reproduce (código generado, procesadores de anotaciones,
+-- módulos, filtrado de recursos...). Si aparecen, se compila con Maven.
+local NEEDS_MAVEN = {
+  "<modules>",
+  "annotationProcessorPaths",
+  "<filtering>true",
+  "<sourceDirectory>",
+  "<compilerArgs>",
+  "build-helper-maven-plugin",
+  "kotlin-maven-plugin",
+  "protobuf",
+  "generated-sources",
+  "maven-antrun-plugin",
+}
+
+function M.needs_maven_compile(pom)
+  for _, needle in ipairs(NEEDS_MAVEN) do
+    if pom:find(needle, 1, true) then
+      return true
+    end
+  end
+  return false
+end
+
 function M.parse_coordinates(coords)
   local parts = vim.split(coords, ":", { plain = true })
   if #parts < 3 or #parts > 4 then
