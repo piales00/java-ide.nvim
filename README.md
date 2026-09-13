@@ -97,14 +97,79 @@ extras with `:LazyExtras`.
 > { "mfussenegger/nvim-jdtls", opts = { test = false } }
 > ```
 
-### vim.pack (Neovim 0.12+)
+### Without LazyVim (plain Neovim 0.12+)
+
+A complete setup in a single file: this plugin, plus [nvim-jdtls](https://github.com/mfussenegger/nvim-jdtls)
+for completion, diagnostics and go to definition. You also need `git` and `python3` (used by the
+jdtls launcher).
+
+1. Save this as `~/.config/nvim/init.lua`:
 
 ```lua
-vim.pack.add({ "https://github.com/piales00/java-ide.nvim" })
+-- ~/.config/nvim/init.lua
+vim.g.mapleader = " "
+
+-- Plugins (vim.pack is built into Neovim 0.12+)
+vim.pack.add({
+  "https://github.com/mason-org/mason.nvim",
+  "https://github.com/mfussenegger/nvim-jdtls",
+  "https://github.com/piales00/java-ide.nvim",
+})
+
+require("mason").setup() -- installs jdtls with :MasonInstall jdtls
 require("java_ide").setup()
+
+-- Start jdtls for Java files
+vim.api.nvim_create_autocmd("FileType", {
+  pattern = "java",
+  callback = function()
+    require("jdtls").start_or_attach({
+      cmd = { "jdtls" },
+      root_dir = vim.fs.root(0, { "pom.xml", "build.gradle", "build.gradle.kts", ".git" }) or vim.fn.getcwd(),
+    })
+  end,
+})
+
+-- Completion while typing, inline errors and go to definition
+vim.o.completeopt = "menuone,noselect,popup"
+vim.diagnostic.config({ virtual_text = true })
+
+vim.api.nvim_create_autocmd("LspAttach", {
+  callback = function(args)
+    local client = vim.lsp.get_client_by_id(args.data.client_id)
+    if client and client:supports_method("textDocument/completion") then
+      local chars = { "." }
+      for c in ("abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ"):gmatch(".") do
+        table.insert(chars, c)
+      end
+      client.server_capabilities.completionProvider.triggerCharacters = chars
+      vim.lsp.completion.enable(true, client.id, args.buf, { autotrigger = true })
+    end
+    vim.keymap.set("n", "gd", vim.lsp.buf.definition, { buffer = args.buf })
+  end,
+})
 ```
 
-### vim-plug
+2. Open `nvim`: the plugins install automatically.
+3. Run `:MasonInstall jdtls` and wait for it to finish.
+4. Open a Java project (or create one with `<leader>jn`). The first time, jdtls takes a few
+   seconds to index it.
+
+What you get:
+
+| Key | Action |
+| --- | --- |
+| Typing | Completion popup; `Ctrl-y` accepts (also adds the import) |
+| `gd` | Go to definition |
+| `K` | Documentation |
+| `grn` / `gra` / `grr` | Rename / code actions / references (Neovim defaults) |
+| `<leader>j…` | Everything from this plugin (see [Usage](#usage)) |
+
+`<leader>` is the space bar in this setup, so `<leader>jr` means Space, `j`, `r`.
+
+### Other plugin managers
+
+vim-plug:
 
 ```vim
 Plug 'piales00/java-ide.nvim'
@@ -117,7 +182,7 @@ After installing, run `:checkhealth java_ide` to make sure nothing is missing.
 ### Updating
 
 - lazy.nvim: `:Lazy update java-ide.nvim`
-- vim.pack: `:lua vim.pack.update()`
+- vim.pack (plain Neovim setup): `:lua vim.pack.update()`
 - vim-plug: `:PlugUpdate`
 
 ## Getting started
