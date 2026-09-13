@@ -63,4 +63,26 @@ function M.has_main(buf)
   return text:match("void%s+main%s*%(") ~= nil
 end
 
+--- Clases con main dentro de una carpeta de fuentes, como nombres completos (com.app.Main).
+function M.find_main_classes(src_dir)
+  local found = {}
+  if not uv.fs_stat(src_dir) then
+    return found
+  end
+  for name, type in vim.fs.dir(src_dir, { depth = math.huge }) do
+    if type == "file" and name:match("%.java$") then
+      local fd = io.open(src_dir .. "/" .. name, "r")
+      local text = fd and fd:read("*a") or ""
+      if fd then
+        fd:close()
+      end
+      if text:match("void%s+main%s*%(") then
+        table.insert(found, (name:gsub("%.java$", ""):gsub("/", ".")))
+      end
+    end
+  end
+  table.sort(found)
+  return found
+end
+
 return M
